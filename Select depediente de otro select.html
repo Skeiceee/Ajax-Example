@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+      integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+      crossorigin="anonymous">
+
+    <title>Select's anidados</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6 col-sm-12 col-lg-6 mx-auto mt-4">
+          <div class="form-group">
+              <!-- Primer Select -->
+              <!--
+                Debes si o si colocar el campo selected="selected" en algun atributo
+
+                Si ves el primer option empieza con un selected y un value 1,
+                el segundo option empieza con un value 2
+              -->
+              <select class="form-control" name="primarySelect" id="primarySelect"> <!--Nombre campo respectivo-->
+                <option value="1" selected="selected" >Primer opcion</option>
+                <option value="2">Segundo opcion</option>
+              </select>
+              <!-- Segundo Select -->
+              <!--
+                Debes si o si colocar el campo selected="selected" en algun atributo
+
+                IMPORTANTE!
+                  El data-attribute su valor hace referencia al Option del primarySelect
+                  por lo tanto si su valor es 1 osea 'data-attribute="1"' cuando se seleccione
+                  el option con valor 1 osea este <option selected="selected" value="1">Primer option</option>,
+                  se imprimiran todos los option del segundo select con el 'data-attribute="1"',
+                  lo mismo pasa si se selecciona el segundo se imprimiran todos los option con 'data-attribute="2"' y
+                  asi se logra las relaciones de un select a otro.
+
+              -->
+              <select class="form-control mt-4" name="secondarySelect" id="secondarySelect" disabled>
+                <option value="1" data-attribute="1" selected="selected">Opcion 1, primera opcion</option>
+                <option value="2" data-attribute="1">Opcion 2, primera opcion</option>
+                <option value="3" data-attribute="2">Opcion 1, segunda opcion</option>
+                <option value="4" data-attribute="2">Opcion 2, segunda opcion</option>
+              </select>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+      integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+      crossorigin="anonymous"></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+      integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+      crossorigin="anonymous"></script>
+  </body>
+  <script>
+  $("#primarySelect").on("click", function() {
+
+      //Remueve el disabled al hacer click, arregla un error (Es necesario)
+      $('#secondarySelect').removeAttr('disabled');
+
+      //Se encarga de cambiar el select, dependiendo del primer select
+      filterSelectOptions($("#secondarySelect"), "data-attribute", $(this).val());
+
+  });
+  
+  function filterSelectOptions(selectElement, attributeName, attributeValue) {
+        if (selectElement.data("currentFilter") != attributeValue) {
+            selectElement.data("currentFilter", attributeValue);
+            var originalHTML = selectElement.data("originalHTML");
+            if (originalHTML)
+                selectElement.html(originalHTML)
+            else {
+                var clone = selectElement.clone();
+                clone.children("option[selected]").removeAttr("selected");
+                selectElement.data("originalHTML", clone.html());
+            }
+            if (attributeValue) {
+                selectElement.children("option:not([" + attributeName + "='" + attributeValue + "'],:not([" + attributeName + "]))").remove();
+            }
+        }
+    }
+
+  </script>
+
+</html>
